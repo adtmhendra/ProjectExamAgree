@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.SearchView
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,33 +11,26 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.example.projectexam.R
 import com.example.projectexam.domain.entity.LatestGameEntity
-import com.example.projectexam.domain.entity.SearchGameEntity
 import com.example.projectexam.domain.entity.TopRatingEntity
 import com.example.projectexam.presentation.LatestGameHomeView
-import com.example.projectexam.presentation.SearchGameHomeView
 import com.example.projectexam.presentation.TopRatingHomeView
 import com.example.projectexam.presentation.adapter.LatestGameAdapter
 import com.example.projectexam.presentation.adapter.TopRatingAdapter
 import com.example.projectexam.presentation.presenter.LatestGamePresenter
 import com.example.projectexam.presentation.presenter.TopRatingPresenter
 import com.example.projectexam.presentation.state.LatestGameState
-import com.example.projectexam.presentation.state.SearchGameState
 import com.example.projectexam.presentation.state.TopRatingState
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
-class HomeActivity : DaggerAppCompatActivity(), TopRatingHomeView, LatestGameHomeView,
-    SearchGameHomeView {
+class HomeActivity : DaggerAppCompatActivity(), TopRatingHomeView, LatestGameHomeView {
 
     @Inject
     lateinit var topRatingPresenter: TopRatingPresenter
 
     @Inject
     lateinit var latestGamePresenter: LatestGamePresenter
-
-//    @Inject
-//    lateinit var searchGamePresenter: SearchGamePresenter
 
     private var topRatingAdapter: TopRatingAdapter? = null
     private var latestGameAdapter: LatestGameAdapter? = null
@@ -51,7 +43,6 @@ class HomeActivity : DaggerAppCompatActivity(), TopRatingHomeView, LatestGameHom
 
         topRatingPresenter.getApiTopRating()
         latestGamePresenter.getApiLatest()
-//        searchGamePresenter.getApiSearch("sims")
 
         getQuery()
     }
@@ -69,10 +60,6 @@ class HomeActivity : DaggerAppCompatActivity(), TopRatingHomeView, LatestGameHom
     override fun onHideLoading() {
         pb_home.visibility = View.GONE
         rv_top_rating.visibility = View.VISIBLE
-    }
-
-    override fun onSuccess(entity: SearchGameEntity) {
-        Log.d("SearchGameViewModel", "Query ditemukan : ${entity.results.toString()}")
     }
 
     override fun onSuccess(entity: LatestGameEntity) {
@@ -141,10 +128,6 @@ class HomeActivity : DaggerAppCompatActivity(), TopRatingHomeView, LatestGameHom
         Log.e(HomeActivity::class.java.simpleName, "${error.printStackTrace()}")
     }
 
-    override fun onPaginationSuccess(entity: SearchGameEntity) {
-        TODO("Not yet implemented")
-    }
-
     override fun onPaginationSuccess(entity: LatestGameEntity) {
         hideLoading()
         latestGameAdapter?.loadMore(entity.results.toMutableList())
@@ -160,13 +143,6 @@ class HomeActivity : DaggerAppCompatActivity(), TopRatingHomeView, LatestGameHom
         currentPage--
         hideLoading()
     }
-
-    override fun getApiSearch(keyword: String) {
-        TODO("Not yet implemented")
-    }
-
-    override val searchGameState: LiveData<SearchGameState>
-        get() = TODO("Not yet implemented")
 
     override fun getApiTopRating() {
         TODO("Not yet implemented")
@@ -193,18 +169,26 @@ class HomeActivity : DaggerAppCompatActivity(), TopRatingHomeView, LatestGameHom
     }
 
     private fun getQuery() {
-        sv_home.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                sv_home.clearFocus()
-                if (query.isEmpty()) return false
-                goToSearchFragment(query = query)
-                return true
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-        })
+        sv_home.setOnClickListener {
+            val query = sv_home.text.toString()
+            sv_home.clearFocus()
+            if (query.isEmpty()) return@setOnClickListener
+            goToSearchFragment(query = query)
+        }
+
+//        sv_home.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String): Boolean {
+//                sv_home.clearFocus()
+//                if (query.isEmpty()) return false
+//                goToSearchFragment(query = query)
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return false
+//            }
+//        })
     }
 
     private fun goToSearchFragment(query: String) {

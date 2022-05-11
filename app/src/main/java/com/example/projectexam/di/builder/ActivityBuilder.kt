@@ -18,8 +18,4 @@ abstract class ActivityBuilder {
     @Presentation
     @ContributesAndroidInjector(modules = [SearchModule::class])
     abstract fun contributeSearchActivity(): SearchActivity
-
-//    @Presentation
-//    @ContributesAndroidInjector(modules = [SearchModule::class])
-//    abstract fun contributeSearchActivity(): SearchActivity
 }

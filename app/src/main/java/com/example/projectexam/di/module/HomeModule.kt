@@ -53,12 +53,6 @@ abstract class HomeModule {
         fun providesLatestGameRepository(factory: HomeFactory): LatestGameRepositoryImpl =
             LatestGameRepositoryImpl(factory)
 
-//        //SearchGameRepoInstance
-//        @Presentation
-//        @Provides
-//        fun providesSearchGameRepository(factory: HomeFactory): SearchGameRepositoryImpl =
-//            SearchGameRepositoryImpl(factory)
-
         //TopRatingUseCase
         @Presentation
         @Provides
@@ -77,15 +71,6 @@ abstract class HomeModule {
             thread: UIThread
         ): LatestGameUseCase = LatestGameUseCase(repository, executor, thread)
 
-//        //SearchGameUseCase
-//        @Presentation
-//        @Provides
-//        fun providesSearchGameUseCase(
-//            repository: SearchGameRepository,
-//            executor: JobExecutor,
-//            thread: UIThread
-//        ): SearchGameUseCase = SearchGameUseCase(repository, executor, thread)
-
         //TopRatingPresenter
         @Presentation
         @Provides
@@ -101,14 +86,6 @@ abstract class HomeModule {
             view: LatestGameHomeView,
             usecase: LatestGameUseCase
         ): LatestGamePresenter = LatestGamePresenter(view, usecase)
-
-//        //SearchGamePresenter
-//        @Presentation
-//        @Provides
-//        fun providesSearchGamePresenter(
-//            view: SearchGameHomeView,
-//            usecase: SearchGameUseCase
-//        ): SearchGamePresenter = SearchGamePresenter(view, usecase)
     }
 
     @Binds
@@ -132,15 +109,4 @@ abstract class HomeModule {
     @IntoMap
     @ViewModelKey(LatestGameViewModel::class)
     abstract fun bindLatestGameViewModel(ViewModel: LatestGameViewModel): ViewModel
-
-//    @Binds
-//    abstract fun bindSearchGameRepository(repositoryImpl: SearchGameRepositoryImpl): SearchGameRepository
-//
-//    @Binds
-//    abstract fun bindSearchGameHomeView(activity: HomeActivity): SearchGameHomeView
-//
-//    @Binds
-//    @IntoMap
-//    @ViewModelKey(SearchGameViewModel::class)
-//    abstract fun bindSearchGameViewModel(ViewModel: SearchGameViewModel): ViewModel
 }

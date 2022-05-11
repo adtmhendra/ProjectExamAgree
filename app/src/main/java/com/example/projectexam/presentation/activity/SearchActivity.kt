@@ -11,8 +11,12 @@ import com.example.projectexam.presentation.SearchGameHomeView
 import com.example.projectexam.presentation.adapter.SearchGameAdapter
 import com.example.projectexam.presentation.presenter.SearchGamePresenter
 import com.example.projectexam.presentation.state.SearchGameState
+import com.jakewharton.rxbinding4.widget.textChanges
 import dagger.android.support.DaggerAppCompatActivity
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_search.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SearchActivity : DaggerAppCompatActivity(), SearchGameHomeView {
@@ -33,7 +37,20 @@ class SearchActivity : DaggerAppCompatActivity(), SearchGameHomeView {
         getQuery = intent.getStringExtra(QUERY).toString()
 
         searchGamePresenter.getApiSearch(getQuery)
-        Log.d("SearchActivity", getQuery)
+//        searchGame(sv_game)
+
+        sv_game.textChanges()
+            .filter { it.length > 1 }
+            .map { input -> input.toString() }
+            .debounce(300, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ input ->
+                searchGamePresenter.getApiSearch(input)
+                Log.d("SearchActivity", input.toString())
+            }, { error ->
+                Log.d("SearchActivity", error.message.toString())
+            })
     }
 
     override fun onDestroy() {
@@ -42,11 +59,9 @@ class SearchActivity : DaggerAppCompatActivity(), SearchGameHomeView {
     }
 
     override fun onShowLoading() {
-//        TODO("Not yet implemented")
     }
 
     override fun onHideLoading() {
-//        TODO("Not yet implemented")
     }
 
     override fun onSuccess(entity: SearchGameEntity) {
@@ -75,23 +90,34 @@ class SearchActivity : DaggerAppCompatActivity(), SearchGameHomeView {
     }
 
     override fun onError(error: Throwable) {
-//        TODO("Not yet implemented")
     }
 
     override fun onPaginationSuccess(entity: SearchGameEntity) {
-//        TODO("Not yet implemented")
     }
 
     override fun onPaginationError(error: Throwable) {
-//        TODO("Not yet implemented")
     }
 
     override fun getApiSearch(keyword: String) {
-//        TODO("Not yet implemented")
     }
 
     override val searchGameState: LiveData<SearchGameState>
         get() = TODO("Not yet implemented")
+
+//    private fun searchGame(searchView: SearchView) {
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String): Boolean {
+//                searchView.clearFocus()
+//                if (query.isEmpty()) return false
+//                searchGamePresenter.getApiSearch(query)
+//                return true
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                return false
+//            }
+//        })
+//    }
 
     companion object {
         const val QUERY = "query"

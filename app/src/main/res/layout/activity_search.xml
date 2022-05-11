@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:padding="8dp">
 
-        <SearchView
+        <EditText
             android:id="@+id/sv_game"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,15 +20,23 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
+            android:autofillHints=""
             android:background="@drawable/searchview_background"
-            android:focusableInTouchMode="false"
-            android:iconifiedByDefault="false"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:drawablePadding="8dp"
+            android:drawableTint="@android:color/darker_gray"
+            android:hint="Boleh, mau nyari apa?"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:paddingStart="20dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="14dp"
             android:queryBackground="@android:color/transparent"
-            android:queryHint="Boleh, mau nyari apa?"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,UnusedAttribute" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_search"
